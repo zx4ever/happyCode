@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.boe.dao.PunchCardDao">
+    
+    <select id="selectData" resultType="com.boe.entity.PunchCard">
+		select
+		id,userId,morning,empty,afterBreakfast,beforeLunch,afterLunch,beforeDinner,afterDinner,sleep,date,state,count
+		from punchcard WHERE userId = #{id} and state =1 ORDER BY date desc
+	</select>
+	
+	<select id="getXY" resultType="java.util.Map">
+		SELECT SUM(count) as counts,count(id) as days from punchCard where state=1 and userId=#{id}
+	</select>
+	
+	
+	<insert id="insterData" parameterType="com.boe.entity.PunchCard">
+		insert INTO 
+		punchcard(
+		userId,
+		morning,
+		empty,
+		afterBreakfast,
+		beforeLunch,
+		afterLunch,
+		beforeDinner,
+		afterDinner,
+		sleep,
+		date,
+		count
+		) 
+		VALUES(
+		#{userId},
+		#{morning},
+		#{empty},
+		#{afterBreakfast},
+		#{beforeLunch},
+		#{afterLunch},
+		#{beforeDinner},
+		#{afterDinner},
+		#{sleep},
+		#{date},
+		#{count}
+		)
+	</insert>
+	
+	<update id="updateData" parameterType="com.boe.entity.PunchCard">
+	
+		update punchcard 
+		set 
+		<if test="morning!=null">
+		morning = #{morning},
+		</if>
+		<if test="empty">
+		empty = #{empty},
+		</if>
+		<if test="afterBreakfast!=null">
+		afterBreakfast = #{afterBreakfast},
+		</if>
+		<if test="beforeLunch!=null">
+		beforeLunch = #{beforeLunch},
+		</if>
+		<if test="afterLunch!=null">
+		afterLunch = #{afterLunch},
+		</if>
+		<if test="beforeDinner!=null">
+		beforeDinner = #{beforeDinner},
+		</if>
+		<if test="afterDinner!=null">
+		afterDinner = #{afterDinner},
+		</if>
+		<if test="sleep!=null">
+		sleep = #{sleep},
+		</if>
+		<if test="date!=null">
+		date = #{date},
+		</if>
+		<if test="count!=null">
+		count = #{count}
+		</if>
+		where userId = #{userId} and state =1
+	</update>
+	
+	<update id="updateState">
+		update punchcard set state = 0 where userId=#{id}
+	</update>
+	
+	<select id="getWords" resultType="java.util.Map">
+		select * from term where id =#{id}
+	</select>   
+	
+	<select id="getObj">
+		select count(id)
+		from punchcard WHERE userId = #{userId} and state =1 and date = #{date}
+	</select>
+	
+</mapper>

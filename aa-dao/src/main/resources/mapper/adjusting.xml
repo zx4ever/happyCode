@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.boe.dao.AdjustingDao">
+
+
+	<select id="selectData" resultType="com.boe.entity.Adjusting">
+		select
+		id,
+		userId,
+		state,
+		times,
+		r
+		from adjusting WHERE 
+		userId = #{id} 
+		and state =1
+	</select>
+	
+	<insert id="insertData" parameterType="com.boe.entity.Adjusting">
+		insert into 
+		adjusting(
+		userId,
+		state,
+		times,
+		r
+		) 
+		values(
+		#{userId}，
+		#{state},
+		#{times},
+		#{r}
+		)
+	</insert>
+	
+	<update id="updateDate"  parameterType="com.boe.entity.Adjusting">
+		update adjusting set
+		<if test="state!=null">
+		state = #{#state},
+		</if>
+		<if test="times!=null">
+		times = #{#times},
+		</if>
+		<if test="r!=null">
+		r = #{#r}
+		</if>
+		where userId = #{userId}
+	</update>
+	
+	<select id="getFrequency" parameterType="java.util.Map">
+		select COUNT(id) as value from adjusting where userId !=#{userId} and r  &lt;= #{r} and state=1
+	</select>
+	
+	<select id="getSum" >
+		select COUNT(id) as value from adjusting where userId !=#{userId} 
+	</select>
+	
+	<update id="recalibrate">
+	  update  adjustng set 
+	  state = 0
+	  where userId = #{userId}
+	</update>
+</mapper>
